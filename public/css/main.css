@@ -1,4 +1,80 @@
 body {
-  background:black;
-  color:white;
+  background:white;
+  color:black;
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  text-align: center;
+}
+
+#add-item-form-container {
+  background: lightblue;
+  border: 5px solid cornflowerblue;
+  border-radius: 10px;
+  width: 30%;
+  margin: 100px auto;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+#shopping-lists-container {
+  width: 60%;
+  margin: 0 auto;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  display: flex;
+}
+
+.shopping-list-container {
+  background: lightgreen;
+  border: 5px solid darkseagreen;
+  border-radius: 10px;
+  width: 40%;
+  margin: 10px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shopping-list-container.to-buy {
+  background: #ffa1b4;
+  border: 5px solid #f58ca1;
+}
+
+.fjalla-one-regular {
+  font-family: "Fjalla One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.comic-relief-regular {
+  font-family: "Comic Relief", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.submit-button {
+  background: #71acbf;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+}
+
+#delete-button {
+  background: #white;
+  border: 1px solid grey;
+  border-radius: 3px;
+
+  display: block;
+  margin-left: 15px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+

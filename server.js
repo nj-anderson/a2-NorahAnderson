@@ -7,17 +7,19 @@ const http = require( 'http' ),
       dir  = 'public/',
       port = 3000
 
-const appdata = [
-  { 'model': 'toyota', 'year': 1999, 'mpg': 23 },
-  { 'model': 'honda', 'year': 2004, 'mpg': 30 },
-  { 'model': 'ford', 'year': 1987, 'mpg': 14} 
-]
+const appdata = []
 
 const server = http.createServer( function( request,response ) {
   if( request.method === 'GET' ) {
     handleGet( request, response )    
   }else if( request.method === 'POST' ){
-    handlePost( request, response ) 
+    if (request.url === '/submit') {
+      handleSubmit(request, response)
+    } else if (request.url === '/update') {
+      handleUpdate(request, response)
+    } else if (request.url === '/delete') {
+      handleDelete(request, response)
+    }
   }
 })
 
@@ -31,21 +33,85 @@ const handleGet = function( request, response ) {
   }
 }
 
-const handlePost = function( request, response ) {
-  let dataString = ''
+const description = function( item ) {
+   return item.description = item.quantity + " " + item.item
+}
 
+const handleSubmit = function( request, response ) {
+  let dataString = '' // holds data from the browser
+
+  // whenever some data arrives, add it to dataString
   request.on( 'data', function( data ) {
       dataString += data 
   })
 
-  request.on( 'end', function() {
-    console.log( JSON.parse( dataString ) )
-    // ... do something with the data here!!!
 
-    response.writeHead( 200, "OK", {'Content-Type': 'text/plain' })
+  request.on( 'end', function() { // wait until all the data is received
+    const listItem = JSON.parse( dataString ) // convert the JSON string back to a js object
+    listItem.id = appdata.length + 1 // add a unique id to the item
+    listItem.description = description( listItem )
+    console.log( listItem )
 
-    // change this to incorporate data
-    response.end('test')
+    appdata.push( listItem ) // add the new item to the array
+    console.log( appdata )
+
+    response.writeHead( 200, "OK", {'Content-Type': 'text/plain' }) // tells the browser that the response is ok/success
+
+    response.end(JSON.stringify(appdata))
+  })
+}
+
+const handleUpdate = function (request, response) {
+  let dataString = ''
+
+  // whenever some data arrives, add it to dataString
+  request.on( 'data', function( data ) {
+    dataString += data
+  })
+
+  request.on('end', function() {
+    const update = JSON.parse(dataString)
+
+    // find the item in the array that matches the id of the checked/unchecked item
+    const item = appdata.find(function(grocery) {
+      return grocery.id === update.id
+    })
+
+    // update the is_purchased property of the item
+    item.is_purchased = update.is_purchased
+
+    response.writeHead( 200, "OK", {'Content-Type': 'text/plain' }) // tells the browser that the response is ok/success
+
+    console.log(appdata)
+
+    response.end(JSON.stringify(appdata))
+  })
+}
+
+const handleDelete = function (request, response) {
+  let dataString = ''
+
+  // whenever some data arrives, add it to dataString
+  request.on( 'data', function( data ) {
+    dataString += data
+  })
+
+  request.on('end', function() {
+    const deleted = JSON.parse(dataString)
+
+    // find the item in the array that matches the id of the deleted item
+    const index = appdata.findIndex(function(grocery) {
+      return grocery.id === deleted.id
+    })
+
+    appdata.splice(index, 1)
+
+    response.writeHead( 200, "OK", {'Content-Type': 'text/plain' }) // tells the browser that the response is ok/success
+
+    console.log(appdata)
+
+    response.end(JSON.stringify(appdata))
+
   })
 }
 

@@ -5,14 +5,47 @@
     <meta charset='utf-8' />
     <script src='js/main.js'></script>
     <link rel='stylesheet' href='css/main.css' />
-    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&family=Fjalla+One&display=swap" rel="stylesheet">
+
+
     <!-- get rid of favicon error -->
     <link rel='icon' href='data:;base64,iVBORw0KGgo=' />
   </head>
   <body>
-    <form>
-      <input type='text' id='yourname' value='your name here'>
-      <button>submit</button>
+
+  <div id='add-item-form-container'>
+    <form class="fjalla-one-regular">
+      <label for='item'>Item</label>
+      <input type='text' id='item'/>
+      <br/>
+
+      <label for='quantity'>Quantity</label>
+      <input type='text' id='quantity'>
+      <br/>
+
+      <label for="is_purchased">Purchased?</label>
+      <input type="checkbox" id="is_purchased" value="false">
+      <br/>
+
+      <button class="submit-button">Add</button>
     </form>
+  </div>
+
+  <div id='shopping-lists-container'>
+    <div id='shopping-list-to-buy' class='shopping-list-container to-buy'>
+      <h2 class="fjalla-one-regular">To Buy</h2>
+      <ul id='shopping-list-to-buy-items' class="comic-relief-regular">
+      </ul>
+    </div>
+    <div id='shopping-list-purchased' class='shopping-list-container'>
+      <h2 class="fjalla-one-regular">Already Purchased</h2>
+      <ul id='shopping-list-purchased-items' class="comic-relief-regular">
+      </ul>
+    </div>
+  </div>
+
   </body>
 </html>
