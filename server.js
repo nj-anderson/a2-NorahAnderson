@@ -19,6 +19,8 @@ const appdata = []
 
 
 app.post("/submit", function(request, response) {
+  console.log(request.headers);
+  console.log(request.body);
   handleSubmit(request, response);
 });
 
@@ -36,6 +38,8 @@ const description = function( item ) {
 }
 
 const handleSubmit = function( request, response ) {
+
+  console.log(request.body);
 
     const listItem = request.body
     listItem.id = appdata.length + 1 // add a unique id to the item

@@ -27,7 +27,10 @@ const submit = async function( event ) {
   // send request to server
   const response = await fetch( '/submit', {
     method:'POST',
-    body 
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body
   })
 
   // waits for response from server
@@ -78,6 +81,9 @@ const renderLists = function() {
 
       const response = await fetch('/update', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body
       })
 
@@ -99,6 +105,9 @@ const renderLists = function() {
 
       const response = await fetch('/delete', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body
       })
 
