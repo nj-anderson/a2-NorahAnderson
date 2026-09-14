@@ -60,12 +60,15 @@ const renderLists = function() {
     const to_buy_li = document.createElement('li')
     const purchased_li = document.createElement('li')
 
+    to_buy_li.classList.add('grocery-item')
+    purchased_li.classList.add('grocery-item')
+
     const checkbox = document.createElement('input')
     checkbox.type = 'checkbox'
     checkbox.checked = item.is_purchased
 
     const delete_button = document.createElement('button')
-    delete_button.textContent = 'Delete'
+    delete_button.innerHTML = '<i class="bi bi-trash"></i>'
     delete_button.id = 'delete-button'
 
     // listen for changes to the checkboxes
@@ -118,14 +121,14 @@ const renderLists = function() {
     })
 
     if( item.is_purchased ) {
-      purchased_li.textContent = item.description
       purchased_li.appendChild(checkbox)
+      purchased_li.appendChild(document.createTextNode(item.description))
       purchased_li.appendChild(delete_button)
       shopping_list_purchased_items.appendChild(purchased_li)
     }
     else{
-      to_buy_li.textContent = item.description
       to_buy_li.appendChild(checkbox)
+      to_buy_li.appendChild(document.createTextNode(item.description))
       to_buy_li.appendChild(delete_button)
       shopping_list_to_buy_items.appendChild(to_buy_li)
     }
@@ -133,7 +136,15 @@ const renderLists = function() {
 
 }
 
-window.onload = function() { // wait for the page to load
+window.onload = async function() { // wait for the page to load
+  console.log('PAGE LOADED')
+
   const button = document.querySelector('button') //find the button
   button.onclick = submit // connects button to submit function
+
+  // render the lists whenever the page loads
+  const response = await fetch('/items')
+  groceryList = await response.json()
+
+  renderLists()
 }

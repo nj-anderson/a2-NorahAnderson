@@ -1,8 +1,23 @@
+require("dotenv").config()
+
 const express = require("express");
 const path = require("path");
+const { MongoClient } = require("mongodb");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const client = new MongoClient(process.env.MONGODB_URI);
+const db = client.db("a3-grocery");
+const items = db.collection("items");
+
+client.connect()
+    .then(function() {
+        console.log("Connected to MongoDB");
+    })
+    .catch(function(error) {
+        console.error("MongoDB connection error:", error);
+    });
 
 // Parse JSON request bodies
 app.use(express.json());
@@ -15,9 +30,7 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-const appdata = []
-
-
+//ENDPOINTS
 app.post("/submit", function(request, response) {
   console.log(request.headers);
   console.log(request.body);
@@ -25,11 +38,18 @@ app.post("/submit", function(request, response) {
 });
 
 app.post("/update", function(request, response) {
-  handleUpdate(request, response);
+    console.log(request.headers);
+    console.log(request.body);
+    handleUpdate(request, response);
 })
 
 app.post("/delete", function(request, response) {
   handleDelete(request, response);
+})
+
+app.get("/items", async function(request, response) {
+    const groceryList = await items.find().toArray()
+    response.status(200).json(groceryList)
 })
 
 
@@ -37,50 +57,51 @@ const description = function( item ) {
    return item.description = item.quantity + " " + item.item
 }
 
-const handleSubmit = function( request, response ) {
+const handleSubmit = async function( request, response ) {
 
   console.log(request.body);
 
     const listItem = request.body
-    listItem.id = appdata.length + 1 // add a unique id to the item
+
+    // add a unique id to the item
+    const lastItem = await items.find().sort({ id: -1 }).limit(1).toArray();
+    listItem.id = lastItem.length > 0 ? lastItem[0].id + 1 : 1;
+
     listItem.description = description( listItem )
     console.log( listItem )
 
-    appdata.push( listItem ) // add the new item to the array
-    console.log( appdata )
+    await items.insertOne( listItem )
 
-    response.status(200).json(appdata)
+    const groceryList = await items.find().toArray()
+
+    response.status(200).json(groceryList)
 }
 
-const handleUpdate = function (request, response) {
+const handleUpdate = async function (request, response) {
     const update = request.body
 
-    // find the item in the array that matches the id of the checked/unchecked item
-    const item = appdata.find(function(grocery) {
-      return grocery.id === update.id
-    })
+    await items.updateOne(
+        { id: update.id }, // find the item that matches the id of the checked/unchecked item
+        { $set: { is_purchased: update.is_purchased } } // update the is_purchased property of the item
+    )
 
-    // update the is_purchased property of the item
-    item.is_purchased = update.is_purchased
+    const groceryList = await items.find().toArray()
 
-    console.log(appdata)
+    console.log(groceryList)
 
-    response.status(200).json(appdata)
+    response.status(200).json(groceryList)
 }
 
-const handleDelete = function (request, response) {
+const handleDelete = async function (request, response) {
 
     const deleted = request.body
 
-    // find the item in the array that matches the id of the deleted item
-    const index = appdata.findIndex(function(grocery) {
-      return grocery.id === deleted.id
-    })
+    await items.deleteOne({ id: deleted.id })
 
-    appdata.splice(index, 1)
+    const groceryList = await items.find().toArray()
 
-    console.log(appdata)
+    console.log(groceryList)
 
-    response.status(200).json(appdata)
+    response.status(200).json(groceryList)
 }
 
