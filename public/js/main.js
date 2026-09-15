@@ -70,6 +70,7 @@ const renderLists = function() {
     const delete_button = document.createElement('button')
     delete_button.innerHTML = '<i class="bi bi-trash"></i>'
     delete_button.id = 'delete-button'
+    delete_button.setAttribute('aria-label', 'Delete grocery item')
 
     // listen for changes to the checkboxes
     checkbox.addEventListener('change', async function() {
@@ -141,6 +142,13 @@ window.onload = async function() { // wait for the page to load
 
   const button = document.querySelector('button') //find the button
   button.onclick = submit // connects button to submit function
+
+  const statusResponse = await fetch('/auth/status')
+  const status = await statusResponse.json()
+
+  if (!status.loggedIn) {
+    return // dont try to render lists if not logged in
+  }
 
   // render the lists whenever the page loads
   const response = await fetch('/items')

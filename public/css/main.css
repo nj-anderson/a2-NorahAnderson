@@ -254,3 +254,9 @@ label {
   margin-left: auto;
   color: dimgrey;
 }
+
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}

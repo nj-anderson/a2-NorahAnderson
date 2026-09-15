@@ -20,6 +20,9 @@
 
   <header>
     <h1>My Grocery List</h1>
+    <a href="/logout" class="btn btn-secondary logout-button">
+      Log out
+    </a>
   </header>
 
   <div id="add-item-form-container">
@@ -40,10 +43,10 @@
 
         <div class="form-field purchased-field">
           <label for="is_purchased">Purchased?</label>
-          <input type="checkbox" id="is_purchased" class="form-check-input">
+          <input type="checkbox" id="is_purchased" class="form-check-input" aria-label="Mark grocery item as purchased">
         </div>
 
-        <button class="submit-button btn btn-primary">
+        <button class="submit-button btn btn-primary" aria-label="Add grocery item">
           <i class="bi bi-plus-lg"></i>
         </button>
 
